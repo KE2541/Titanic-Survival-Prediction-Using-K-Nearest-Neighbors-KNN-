@@ -1,0 +1,197 @@
+# Titanic Survival Prediction Using K-Nearest Neighbors (KNN)
+
+## Project Overview
+
+This project implements a supervised machine learning model to predict Titanic passenger survival using the **K-Nearest Neighbors (KNN)** classification algorithm. Developed in Python, it demonstrates an end-to-end machine learning workflow involving data exploration, missing-value handling, feature engineering, hyperparameter tuning, model evaluation, and visualization.
+
+The model uses Scikit-learn pipelines and GridSearchCV to identify suitable KNN parameters and evaluates its predictions using accuracy, precision, recall, F1-score, and a confusion matrix.
+
+## Project Objectives
+
+- Explore and understand the Titanic passenger dataset.
+- Identify and handle missing values.
+- Engineer features that describe passenger and family characteristics.
+- Train a KNN classification model.
+- Optimize model parameters using five-fold cross-validation.
+- Evaluate classification performance on a held-out test set.
+- Visualize actual versus predicted survival outcomes.
+
+## Technologies Used
+
+| Technology | Purpose |
+|---|---|
+| Python | Programming and model implementation |
+| Pandas | Data loading, exploration, and manipulation |
+| NumPy | Numerical operations and feature engineering |
+| Scikit-learn | Preprocessing, KNN, tuning, and evaluation |
+| Matplotlib | Visualization |
+| Seaborn | Confusion matrix heatmap |
+
+## Dataset Description
+
+The project uses `tested.csv`, containing **418 passenger records and 12 original columns**, including the `Survived` target variable.
+
+### Dataset summary
+
+| Metric | Result |
+|---|---:|
+| Passenger records | 418 |
+| Original columns | 12 |
+| Missing `Age` values | 86 |
+| Missing `Fare` values | 1 |
+| Missing `Cabin` values | 327 |
+| Training records | 313 |
+| Testing records | 105 |
+| Features used by the model | 10 |
+
+The dataset contains passenger details such as class, sex, age, fare, siblings or spouses aboard, parents or children aboard, and survival status.
+
+**Important:** The file includes survival labels, which are required for supervised training and evaluation. Verify the dataset's source and labels before interpreting the results as evidence of real-world predictive performance.
+
+## Data Preprocessing and Feature Engineering
+
+The preprocessing workflow includes:
+
+1. **Missing-value handling:** Fill missing ages using median age grouped by passenger class and sex, with an overall median fallback. Replace missing fares with the median.
+2. **Column selection:** Remove passenger identifiers, names, ticket numbers, cabin information, and the unused embarkation column.
+3. **Categorical encoding:** Convert `Sex` into numerical values.
+4. **Feature engineering:** Create `FamilySize`, `IsAlone`, `AgeBin`, and `FareBin`.
+5. **Feature scaling:** Apply Min-Max scaling within the Scikit-learn model pipeline.
+6. **Remaining missing values:** Use a median imputer within the pipeline.
+
+### Engineered features
+
+| Feature | Description |
+|---|---|
+| `FamilySize` | Number of siblings/spouses plus parents/children aboard |
+| `IsAlone` | 1 if traveling alone; otherwise 0 |
+| `AgeBin` | Grouped passenger age |
+| `FareBin` | Grouped passenger fare |
+
+## Model Development
+
+The project uses the **K-Nearest Neighbors (KNN)** classifier, which predicts a class based on the labels of nearby data points.
+
+The workflow uses a stratified 75%/25% train-test split with `random_state=42`, followed by hyperparameter tuning using `GridSearchCV` with five-fold cross-validation.
+
+### Best parameters obtained
+
+| Parameter | Selected value |
+|---|---|
+| Distance metric | Euclidean |
+| Number of neighbors (`n_neighbors`) | 3 |
+| Neighbor weighting (`weights`) | Uniform |
+
+**Best cross-validation accuracy: 100.00%**
+
+## Model Evaluation Results
+
+The model was evaluated on a held-out test set containing 105 passenger records.
+
+<escape>
+| Metric | Did Not Survive | Survived |
+|---|---:|---:|
+| Precision | 100% | 100% |
+| Recall | 100% | 100% |
+| F1-score | 100% | 100% |
+| Support | 67 | 38 |
+</escape>
+
+| Evaluation metric | Result |
+|---|---:|
+| Test accuracy | 100.00% |
+| Correct predictions | 105 out of 105 |
+| Incorrect predictions | 0 |
+
+### Confusion matrix
+
+The model produced the following confusion matrix, with rows representing actual classes and columns representing predicted classes:
+
+| Actual / Predicted | Did Not Survive | Survived |
+|---|---:|---:|
+| Did Not Survive | 67 | 0 |
+| Survived | 0 | 38 |
+
+The model correctly classified all 67 passengers labelled as not surviving and all 38 passengers labelled as surviving in this test split.
+
+## Visualization
+
+The Python script generates a confusion matrix heatmap using Seaborn and Matplotlib. The visualization helps assess the distribution of correct and incorrect predictions for each class.
+
+If the plot is saved in the repository as `images/knn-confusion-matrix.png`, display it here:
+
+![KNN Titanic Survival Confusion Matrix](images/knn-confusion-matrix.png)
+
+*To display the image on GitHub, save the generated plot to the indicated path and commit the image file.*
+
+## How to Run the Project
+
+### 1. Clone the repository
+
+Replace `REPOSITORY-NAME` with the actual repository name.
+
+```bash
+git clone https://github.com/KE2541/REPOSITORY-NAME.git
+cd REPOSITORY-NAME
+```
+
+### 2. Create and activate a virtual environment (optional)
+
+On Windows PowerShell:
+
+```powershell
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+```
+
+### 3. Install dependencies
+
+```bash
+python -m pip install pandas numpy matplotlib seaborn scikit-learn
+```
+
+### 4. Add the dataset
+
+Place `tested.csv` in the same directory as `scikit.py`.
+
+### 5. Run the script
+
+```bash
+python scikit.py
+```
+
+The script displays dataset information, missing-value counts, preprocessed data, optimal hyperparameters, cross-validation accuracy, test metrics, the confusion matrix, and the confusion matrix heatmap.
+
+## Key Learning Outcomes
+
+Through this project, I gained practical experience in:
+
+- Building a supervised binary classification workflow.
+- Exploring and cleaning real-world-style tabular data.
+- Handling missing values and engineering features.
+- Implementing Scikit-learn pipelines.
+- Applying GridSearchCV for hyperparameter optimization.
+- Evaluating classification models using multiple metrics.
+- Visualizing model predictions using a confusion matrix.
+
+## Limitations and Future Improvements
+
+Although this run achieved 100% cross-validation and test accuracy, these results should be interpreted cautiously. Perfect scores do not necessarily mean the model will generalize to unseen real-world data.
+
+Potential improvements include:
+
+- Verifying the source and reliability of the dataset labels.
+- Moving all data-dependent preprocessing, including age imputation and fare/age binning, inside a cross-validated preprocessing pipeline to reduce data leakage.
+- Comparing KNN with Logistic Regression, Decision Trees, and Random Forests.
+- Evaluating performance on an independent dataset.
+- Recording and comparing metrics across multiple random splits.
+
+## Author
+
+**KE2541**
+
+GitHub: [https://github.com/KE2541](https://github.com/KE2541)
+
+## Project Purpose
+
+This project is part of my practical learning and portfolio development in Python, data analysis, and machine learning. It demonstrates my ability to take a dataset through preprocessing, model development, evaluation, and visualization.
